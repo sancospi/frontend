@@ -10,31 +10,41 @@ $(function () {
     });
 	$('#run').click(function(){
 		console.log('Running program...');
-		$.each(program, function(index, obj){
-			switch (obj.type) {
-				case 'assign':
-					eval(obj.variable + ' = ' + obj.value);
-					break;
-				case 'if':
-					
-					break;
-				case 'input':
-					bootbox.prompt(obj.message, function(result) {   
-						obj.value = (result === null) ? 0 : result;
-						eval(obj.variable + ' = ' + obj.value);
-					});
-					break;
-				case 'display':
-					var message = obj.message;
-					if( obj.variable !== ''){
-						message += ' ' + eval(obj.variable);
-					}
-					bootbox.alert(message);
-					break;
-			}
-		});
+		run(0);
 	});
 });
+
+function run(pc){
+	var i = (pc == undefined ? 0 : pc)
+	$.each(program.slice(i), function(index, obj){
+		switch (obj.type) {
+			case 'assign':
+				eval(obj.variable + ' = ' + obj.value);
+				break;
+			case 'if':
+				
+				break;
+			case 'input':
+				bootbox.prompt(obj.message, function(result) {   
+					obj.value = (result === null) ? 0 : result;
+					eval(obj.variable + ' = ' + obj.value);
+					run(index+pc+1);
+				});
+				return false;
+				break;
+			case 'display':
+				var message = obj.message;
+				if( obj.variable !== ''){
+					message += ' ' + eval(obj.variable);
+				}
+				bootbox.alert(message,function(result){
+					run(index+pc+1);
+				});
+				return false
+				break;
+		}
+	});
+}
 
 function getObj(type, index) {
     var obj = {
