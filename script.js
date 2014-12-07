@@ -70,6 +70,17 @@ function getObjIf(obj, index) {
     bootbox.dialog({
                 title: "If's Options",
                 message: '' +
+    '<div class="row">' +
+    		'<div class="col-sm-offset-4 col-xs-offset-4 col-sm-4 col-xs-4">' +
+    			'<label class="form-label pull-right">Type</label>' +
+    		'</div>' +
+    		'<div class="col-sm-4 col-xs-4">' +
+    			'<select id="inputType" class="form-control col-sm-4 col-xs-4">' +
+	    			'<option value="variable" selected>Variable</option>' +
+	    			'<option value="constant">Constant</option>' +
+	    		'</select>' +
+    		'</div>' +
+    '</div>' +
         '<div class="row">  ' +
             '<div class="col-sm-4 col-xs-4">' +
                 createVariableSelect("leftVariable", "form-control")+
@@ -86,9 +97,22 @@ function getObjIf(obj, index) {
                 '</select>' +
             '</div>' +
             '<div class="col-sm-4 col-xs-4">' +
-				createVariableSelect("rightVariable", "form-control")+
+							createVariableSelect("rightVariable", "form-control") +
+							'<input type="number" placeholder="Constant" class="form-control" id="rightConstant" style="display:none;">' + 
             '</div>' +
-        '</div>',
+        '</div>' + 
+        '<script>' +
+        	'$("#inputType").change(function(){' + 
+        		'var option = $(this).val();' +
+        		'if(option == "constant") {' + 
+        			'$("#rightConstant").css("display", "");' + 
+        			'$("#rightVariable").css("display", "none");' + 
+        		'} else if(option == "variable") {' + 
+        			'$("#rightVariable").css("display", "");' + 
+        			'$("#rightConstant").css("display", "none");' + 
+        		'}' + 
+        	'});' +
+        '</script>',
                 buttons: {
                     success: {
                         label: "Save",
@@ -97,10 +121,17 @@ function getObjIf(obj, index) {
                             obj.ifTrue = [];
                             obj.ifFalse = [];
                             var left = $('#leftVariable').val();
-                            var right = $('#rightVariable').val();
-                            var operator = $('#operator').val();
-                            obj.value = left + operator +right;
-                            addElement(obj, index);
+                            var option = $('#inputType').val();
+                            if(option == "constant") {
+                            	var right = $('#rightConstant').val();
+								        		} else if(option == "variable") {
+								        			var right = $('#rightVariable').val();
+								        		}
+								        		if(right) {
+								        			var operator = $('#operator').val();
+	                            obj.value = left + operator +right;
+	                            addElement(obj, index);
+								        		}
                         }
                     },
                     cancel:{
