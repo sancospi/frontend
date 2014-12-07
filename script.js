@@ -22,6 +22,7 @@ function getObj(type, index) {
             obj = getObjIf(obj, index);
             break;
         case 'input':
+			getObjInput(obj, index);
             break;
         case 'display':
             break;
@@ -93,7 +94,7 @@ function getObjIf(obj, index) {
         );
 }
 
-function getObjAssign(obj, index) {
+function getObjInput(obj, index) {
     bootbox.dialog({
                 title: "Get user input",
                 message: '<div class="row">  ' +
@@ -129,6 +130,57 @@ function getObjAssign(obj, index) {
 							var msg = $('#message').val();
 							var variable = $('#variable').val();
 							obj.message = msg;
+							obj.variable = variable;
+                            addElement(obj, index);
+                        }
+                    },
+                    cancel:{
+                        label: "Cancel",
+                        className: "btn-danger",
+                        callback: function() {
+                            obj = undefined;
+                        }
+                    }
+                }
+            }
+        );
+}
+
+function getObjAssign(obj, index) {
+    bootbox.dialog({
+                title: "Assign value to variable",
+                message: '<div class="row">  ' +
+                '<div class="col-md-12"> ' +
+                '<form class="form-horizontal"> ' +
+                    '<div class="form-group"> ' +
+						'<label class="col-md-4 control-label" for="variable">Variable</label> ' +
+						'<div class="col-md-4">  ' +
+							'<select id="variable" class="form-control">' +
+							'<option value="">Variable</option>'+
+							'<option value="a">a</option>'+
+							'<option value="b">b</option>'+
+							'<option value="c">c</option>'+
+							'<option value="x">x</option>'+
+							'<option value="y">y</option>'+
+							'<option value="z">z</option>'+
+							'</select>' +
+						'</div>' +
+                    '</div>' +
+					'<div class="form-group"> ' +
+						'<label class="col-md-4 control-label" for="assign_value">What do you want to assign?</label> ' +
+						'<div class="col-md-4"> ' +
+							'<input id="assign_value" name="assign_value" type="text" placeholder="x+5" class="form-control input-md"> ' +
+						'</div> ' +
+                    '</div> ' +
+                 '</form></div></div>',
+                buttons: {
+                    success: {
+                        label: "Save",
+                        className: "btn-success",
+                        callback: function () {
+							var variable = $('#variable').val();
+							var value = $('#assign_value').val();
+							obj.value = value;
 							obj.variable = variable;
                             addElement(obj, index);
                         }
