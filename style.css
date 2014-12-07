@@ -1,0 +1,16 @@
+.program {
+    width:100px;   
+    height:34px;
+}
+.droppable-active {
+    border:2px dashed blue !important;
+}
+.component {
+    width:100px;
+    height:34px;
+}
+.droppable {
+    width:100px;
+    height:34px;
+    border:1px dashed black;
+}
