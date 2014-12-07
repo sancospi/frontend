@@ -8,6 +8,32 @@ $(function () {
         drop: dropElement
 
     });
+	$('#run').click(function(){
+		console.log('Running program...');
+		$.each(program, function(index, obj){
+			switch (obj.type) {
+				case 'assign':
+					eval(obj.variable + ' = ' + obj.value);
+					break;
+				case 'if':
+					
+					break;
+				case 'input':
+					bootbox.prompt(obj.message, function(result) {   
+						obj.value = (result === null) ? 0 : result;
+						eval(obj.variable + ' = ' + obj.value);
+					});
+					break;
+				case 'display':
+					var message = obj.message;
+					if( obj.variable !== ''){
+						message += ' ' + eval(obj.variable);
+					}
+					bootbox.alert(message);
+					break;
+			}
+		});
+	});
 });
 
 function getObj(type, index) {
@@ -314,17 +340,6 @@ function drawIf(index, value) {
     ret += '</div>';
     return ret;
 } 
-
-function displayPrompt(obj){
-	bootbox.prompt(obj.message, function(result) {                
-		if (result === null) {                                             
-			obj.value = obj.variable + ',0';                             
-		} else {
-			obj.value = obj.variable + ',' + result;                             
-		}
-	});
-	
-}
 
 function createVariableSelect(id, klass){
 	return '<select id="'+ id +'" class="'+ klass +'">' +
