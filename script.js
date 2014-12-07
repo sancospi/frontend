@@ -16,6 +16,7 @@ function getObj(type, index) {
     };
     switch (type) {
         case 'assign':
+			getObjAssign(obj, index);
             break;
         case 'if':
             obj = getObjIf(obj, index);
@@ -92,6 +93,58 @@ function getObjIf(obj, index) {
         );
 }
 
+function getObjAssign(obj, index) {
+    bootbox.dialog({
+                title: "Get user input",
+                message: '<div class="row">  ' +
+                '<div class="col-md-12"> ' +
+                '<form class="form-horizontal"> ' +
+					'<div class="form-group"> ' +
+						'<label class="col-md-4 control-label" for="message">Message to display to user</label> ' +
+						'<div class="col-md-4"> ' +
+							'<input id="message" name="message" type="text" placeholder="Message for user" class="form-control input-md"> ' +
+						'</div> ' +
+                    '</div> ' +
+                    '<div class="form-group"> ' +
+						'<label class="col-md-4 control-label" for="variable">Where are you going the store the users input?</label> ' +
+						'<div class="col-md-4">  ' +
+							'<select id="variable" class="form-control">' +
+							'<option value="">Variable</option>'+
+							'<option value="a">a</option>'+
+							'<option value="b">b</option>'+
+							'<option value="c">c</option>'+
+							'<option value="x">x</option>'+
+							'<option value="y">y</option>'+
+							'<option value="z">z</option>'+
+							'</select>' +
+						'</div>' +
+                    '</div>' +
+                 '</form></div></div>',
+                buttons: {
+                    success: {
+                        label: "Save",
+                        className: "btn-success",
+                        callback: function () {
+                            obj.value = '';
+							var msg = $('#message').val();
+							var variable = $('#variable').val();
+							obj.message = msg;
+							obj.variable = variable;
+                            addElement(obj, index);
+                        }
+                    },
+                    cancel:{
+                        label: "Cancel",
+                        className: "btn-danger",
+                        callback: function() {
+                            obj = undefined;
+                        }
+                    }
+                }
+            }
+        );
+}
+
 function dropElement(event, ui) {
     var type = ui.draggable.data('class');
     var index = $(this).data('index');
@@ -124,7 +177,6 @@ function drawArray(array) {
 }
 
 function drawElement(index, value, nested) {
-    console.log(value);
     var name = value.type;
     if(value.type == 'if') {
         name += ' ' + value.value;
@@ -197,3 +249,14 @@ function drawIf(index, value) {
     ret += '</div>';
     return ret;
 } 
+
+function displayPrompt(obj){
+	bootbox.prompt(obj.message, function(result) {                
+		if (result === null) {                                             
+			obj.value = obj.variable + ',0';                             
+		} else {
+			obj.value = obj.variable + ',' + result;                             
+		}
+	});
+	
+}
