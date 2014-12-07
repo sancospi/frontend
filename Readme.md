@@ -18,7 +18,7 @@ Here provide couple screenshots of your project. You can use a tool like https:/
 ## APIs used
 
 We used:
--Bootstrap - http://getbootstrap.com/
--Bootbox.js - http://bootboxjs.com/
--jQuery - http://jquery.com/
--jQueryUI - http://jqueryui.com/
+* [Bootstrap](http://getbootstrap.com/)
+* [Bootbox.js](http://bootboxjs.com/)
+* [jQuery](http://jquery.com/)
+* [jQueryUI](http://jqueryui.com/)
