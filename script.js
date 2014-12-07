@@ -25,6 +25,7 @@ function getObj(type, index) {
 			getObjInput(obj, index);
             break;
         case 'display':
+			getObjDisplay(obj, index);
             break;
     }
 }
@@ -35,15 +36,7 @@ function getObjIf(obj, index) {
                 message: '' +
         '<div class="row">  ' +
             '<div class="col-sm-4 col-xs-4">' +
-                '<select id="leftVariable" class="form-control">' +
-                    '<option value="">Variable</option>'+
-                    '<option value="a">a</option>'+
-                    '<option value="b">b</option>'+
-                    '<option value="c">c</option>'+
-                    '<option value="x">x</option>'+
-                    '<option value="y">y</option>'+
-                    '<option value="z">z</option>'+
-                '</select>' +
+                createVariableSelect("leftVariable", "form-control")+
             '</div>' +
             '<div class="col-sm-4 col-xs-4">' +
                 '<select id="operator" class="form-control">'+
@@ -57,15 +50,7 @@ function getObjIf(obj, index) {
                 '</select>' +
             '</div>' +
             '<div class="col-sm-4 col-xs-4">' +
-                '<select id="rightVariable" class="form-control">' +
-                    '<option value="">Variable</option>'+
-                    '<option value="a">a</option>'+
-                    '<option value="b">b</option>'+
-                    '<option value="c">c</option>'+
-                    '<option value="x">x</option>'+
-                    '<option value="y">y</option>'+
-                    '<option value="z">z</option>'+
-                '</select>' +
+				createVariableSelect("rightVariable", "form-control")+
             '</div>' +
         '</div>',
                 buttons: {
@@ -109,15 +94,7 @@ function getObjInput(obj, index) {
                     '<div class="form-group"> ' +
 						'<label class="col-md-4 control-label" for="variable">Where are you going the store the users input?</label> ' +
 						'<div class="col-md-4">  ' +
-							'<select id="variable" class="form-control">' +
-							'<option value="">Variable</option>'+
-							'<option value="a">a</option>'+
-							'<option value="b">b</option>'+
-							'<option value="c">c</option>'+
-							'<option value="x">x</option>'+
-							'<option value="y">y</option>'+
-							'<option value="z">z</option>'+
-							'</select>' +
+							createVariableSelect("variable", "form-control")+
 						'</div>' +
                     '</div>' +
                  '</form></div></div>',
@@ -155,15 +132,7 @@ function getObjAssign(obj, index) {
                     '<div class="form-group"> ' +
 						'<label class="col-md-4 control-label" for="variable">Variable</label> ' +
 						'<div class="col-md-4">  ' +
-							'<select id="variable" class="form-control">' +
-							'<option value="">Variable</option>'+
-							'<option value="a">a</option>'+
-							'<option value="b">b</option>'+
-							'<option value="c">c</option>'+
-							'<option value="x">x</option>'+
-							'<option value="y">y</option>'+
-							'<option value="z">z</option>'+
-							'</select>' +
+							createVariableSelect("variable", "form-control")+
 						'</div>' +
                     '</div>' +
 					'<div class="form-group"> ' +
@@ -181,6 +150,50 @@ function getObjAssign(obj, index) {
 							var variable = $('#variable').val();
 							var value = $('#assign_value').val();
 							obj.value = value;
+							obj.variable = variable;
+                            addElement(obj, index);
+                        }
+                    },
+                    cancel:{
+                        label: "Cancel",
+                        className: "btn-danger",
+                        callback: function() {
+                            obj = undefined;
+                        }
+                    }
+                }
+            }
+        );
+}
+
+function getObjDisplay(obj, index) {
+    bootbox.dialog({
+                title: "Display input to user",
+                message: '<div class="row">  ' +
+                '<div class="col-md-12"> ' +
+                '<form class="form-horizontal"> ' +
+					'<div class="form-group"> ' +
+						'<label class="col-md-4 control-label" for="message">Message to display to user</label> ' +
+						'<div class="col-md-4"> ' +
+							'<input id="message" name="message" type="text" placeholder="Message for user" class="form-control input-md"> ' +
+						'</div> ' +
+                    '</div> ' +
+                    '<div class="form-group"> ' +
+						'<label class="col-md-4 control-label" for="variable">Append variable to the end?</label> ' +
+						'<div class="col-md-4">  ' +
+							createVariableSelect("variable", "form-control")+
+						'</div>' +
+                    '</div>' +
+                 '</form></div></div>',
+                buttons: {
+                    success: {
+                        label: "Save",
+                        className: "btn-success",
+                        callback: function () {
+                            obj.value = '';
+							var msg = $('#message').val();
+							var variable = $('#variable').val();
+							obj.message = msg;
 							obj.variable = variable;
                             addElement(obj, index);
                         }
@@ -311,4 +324,16 @@ function displayPrompt(obj){
 		}
 	});
 	
+}
+
+function createVariableSelect(id, klass){
+	return '<select id="'+ id +'" class="'+ klass +'">' +
+				'<option value="">Variable</option>'+
+				'<option value="a">a</option>'+
+				'<option value="b">b</option>'+
+				'<option value="c">c</option>'+
+				'<option value="x">x</option>'+
+				'<option value="y">y</option>'+
+				'<option value="z">z</option>'+
+			'</select>';
 }
