@@ -14,15 +14,24 @@ $(function () {
 	});
 });
 
-function run(pc){
+function run(pc, instructions){
 	var i = (pc == undefined ? 0 : pc)
-	$.each(program.slice(i), function(index, obj){
+	var instr = (instructions == undefined? program : instructions);
+	$.each(instr.slice(i), function(index, obj){
 		switch (obj.type) {
 			case 'assign':
 				eval(obj.variable + ' = ' + obj.value);
 				break;
 			case 'if':
+				var logical_value = eval(obj.value);
 				
+				if(logical_value){
+					var new_instructions = obj.ifTrue.concat(instr.slice(index+pc+1));
+					
+				} else{
+					var new_instructions = obj.ifFalse.concat(instr.slice(index+pc+1));
+				}
+				run(0, new_instructions);
 				break;
 			case 'input':
 				bootbox.prompt(obj.message, function(result) {   
