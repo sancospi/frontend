@@ -1,18 +1,17 @@
 .program {
-    /*width:100px;*/ 
     height:34px;
 }
 .droppable-active {
     border:2px dashed blue !important;
 }
 .droppable {
-    /*width:100px;*/
     height:34px;
-    border:1px dashed black;
+    border:1px dashed gray;
 }
 
 .text-center {
 	padding-top: 6px;
+	color: gray;
 }
 
 .jumbotron {

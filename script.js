@@ -131,14 +131,16 @@ function getObjIf(obj, index, condition) {
 							var option = $('#inputType').val();
 							if(option == "constant") {
 								var right = $('#rightConstant').val();
-												} else if(option == "variable") {
-													var right = $('#rightVariable').val();
-												}
-												if(right) {
-													var operator = $('#operator').val();
-								obj.value = left + operator +right;
+							} else if(option == "variable") {
+								var right = $('#rightVariable').val();
+							}
+							if(right + left + option) {
+								var operator = $('#operator').val();
+								obj.value = left + operator + right;
 								addElement(obj, index, condition);
-												}
+							} else {
+								bootbox.alert('Please make a comparation eg: "a less than b"');
+							}
 						}
 					},
 					cancel:{
@@ -182,7 +184,11 @@ function getObjInput(obj, index, condition) {
 							var variable = $('#variable').val();
 							obj.message = msg;
 							obj.variable = variable;
-							addElement(obj, index, condition);
+							if(msg && variable){
+								addElement(obj, index, condition);
+							} else {
+								bootbox.alert('Please enter a message and choose a variable');
+							}
 						}
 					},
 					cancel:{
@@ -225,7 +231,11 @@ function getObjAssign(obj, index, condition) {
 							var value = $('#assign_value').val();
 							obj.value = value;
 							obj.variable = variable;
-							addElement(obj, index, condition);
+							if(value && variable) {
+								addElement(obj, index, condition);
+							} else {
+								bootbox.alert('Please select a variable and enter an assignation');
+							}
 						}
 					},
 					cancel:{
@@ -269,7 +279,11 @@ function getObjDisplay(obj, index, condition) {
 							var variable = $('#variable').val();
 							obj.message = msg;
 							obj.variable = variable;
-							addElement(obj, index, condition);
+							if(msg && variable) {
+								addElement(obj, index, condition);
+							} else {
+								bootbox.alert('Please enter a message and choose a variable');
+							}
 						}
 					},
 					cancel:{
@@ -287,11 +301,13 @@ function getObjDisplay(obj, index, condition) {
 function dropElement(event, ui) {
 	var type = ui.draggable.data('class');
 	var index = $(this).data('index');
+	if(type == 'if' && index !== undefined) {
+		return;
+	}
 	var obj = getObj(type, index, $(this).data('condition'));
 }
 
 function addElement(obj, index, condition) {
-	console.log(program, obj, index);
 	if(obj) {
 		if (index !== undefined) {
 			program[index][condition].push(obj);
@@ -308,19 +324,30 @@ function drawArray(array) {
 	$.each(program, function (index, value) {
 		tag += drawElement(index, value);
 	});
-	$('#tail').append(tag + '<div class="row"><div class="droppable col-xs-2 col-sm-2"></div></div>');
+	$('#tail').append(tag + '<div class="row"><div class="droppable col-xs-2 col-sm-2 text-center">main flow</div></div>');
 	$('.droppable').droppable({
 		hoverClass: "droppable-active",
 		drop: dropElement
 	});
+	$('.pop').popover();
 }
 
 function drawElement(index, value, nested) {
 	var name = value.type;
 	if(value.type == 'if') {
 		name += ' ' +  getOperator(value.value);
+	} else if(value.type == 'assign') {
+		var msg = value.variable + ' = ' + value.value;
+	} else if(value.type == 'input') {
+		var msg = 'Save input in ' + value.variable;
+	} else if(value.type == 'display') {
+		var msg = 'Show variable ' + value.variable + ' content';
 	}
-	var tag = '<a class="btn btn-default program col-xs-2 col-sm-2">' + name + '</a>';
+	var pop = '';
+	if(msg){
+		pop = 'data-container="body" data-toggle="popover" data-placement="top" data-content="'+msg+'"';
+	}
+	var tag = '<a class="btn btn-default program col-xs-2 col-sm-2 '+ (pop ? 'pop' : '') +'" '+pop+'>' + name + '</a>';
 	if (!nested) {
 		tag = '<div class="row">' + tag + '</div>';
 		if (value.type == 'if') {
