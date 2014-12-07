@@ -9,7 +9,6 @@ $(function () {
 
 	});
 	$('#run').click(function(){
-		console.log('Running program...');
 		run(0);
 	});
 });
@@ -24,20 +23,19 @@ function run(pc, instructions){
 				break;
 			case 'if':
 				var logical_value = eval(obj.value);
-				
 				if(logical_value){
 					var new_instructions = obj.ifTrue.concat(instr.slice(index+pc+1));
-					
 				} else{
 					var new_instructions = obj.ifFalse.concat(instr.slice(index+pc+1));
 				}
 				run(0, new_instructions);
+				return false;
 				break;
 			case 'input':
 				bootbox.prompt(obj.message, function(result) {   
 					obj.value = (result === null) ? 0 : result;
 					eval(obj.variable + ' = ' + obj.value);
-					run(index+pc+1);
+					run(index+pc+1, instructions);
 				});
 				return false;
 				break;
@@ -47,7 +45,7 @@ function run(pc, instructions){
 					message += ' ' + eval(obj.variable);
 				}
 				bootbox.alert(message,function(result){
-					run(index+pc+1);
+					run(index+pc+1, instructions);
 				});
 				return false
 				break;
