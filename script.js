@@ -88,12 +88,12 @@ function getObjIf(obj, index, condition) {
 			'<div class="col-sm-4 col-xs-4">' +
 				'<select id="operator" class="form-control">'+
 					'<option value="">Operator</option>'+
-					'<option value="<"><</option>'+
-					'<option value=">">></option>'+
-					'<option value="==">==</option>'+
-					'<option value="<="><=</option>'+
-					'<option value=">=">>=</option>'+
-					'<option value="!=">!=</option>'+
+					'<option value="<">less than</option>'+
+					'<option value=">">greater than</option>'+
+					'<option value="==">equal to</option>'+
+					'<option value="<=">less than or equal to</option>'+
+					'<option value=">=">greater than or equal to</option>'+
+					'<option value="!=">not equal to</option>'+
 				'</select>' +
 			'</div>' +
 			'<div class="col-sm-4 col-xs-4">' +
@@ -311,7 +311,7 @@ function drawArray(array) {
 function drawElement(index, value, nested) {
 	var name = value.type;
 	if(value.type == 'if') {
-		name += ' ' + value.value;
+		name += ' ' +  getOperator(value.value);
 	}
 	var tag = '<a class="btn btn-default program col-xs-2 col-sm-2">' + name + '</a>';
 	if (!nested) {
@@ -321,6 +321,17 @@ function drawElement(index, value, nested) {
 		}
 	}
 	return tag;
+}
+
+function getOperator(value) {
+	var ret = value;
+	ret = ret.replace('<=',' less than or equal to ');
+	ret = ret.replace('>=',' greater than or equal to ');
+	ret = ret.replace('==',' equal to ');
+	ret = ret.replace('!=',' not equal to ');
+	ret = ret.replace('<',' less than ');
+	ret = ret.replace('>',' greater than ');
+	return ret;
 }
 
 function drawIf(index, value) {
